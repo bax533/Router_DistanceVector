@@ -5,9 +5,26 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+#include "Common.hpp"
 
-int main()
+int main(int argc, char** argv)
 {
+        char* ip_send;
+        if(argc == 2)
+        {
+            ip_send = argv[1];
+            if(!Common::check_input(ip_send))
+            {
+                printf("wrong input\n");
+                return 0;
+            }
+        }
+        else
+        {
+            printf("podaj ip\n");
+            return 0;
+        }
+
 	int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sockfd < 0) {
 		fprintf(stderr, "socket error: %s\n", strerror(errno)); 
@@ -17,17 +34,17 @@ int main()
 	struct sockaddr_in server_address;
 	bzero (&server_address, sizeof(server_address));
 	server_address.sin_family      = AF_INET;
-	server_address.sin_port        = htons(32345);
-	inet_pton(AF_INET, "127.0.0.1", &server_address.sin_addr);
+	server_address.sin_port        = htons(54321);
+	inet_pton(AF_INET, ip_send, &server_address.sin_addr);
 
-	char* message = "Hello server!";
+	char* message = "Hello server!lsdkfjlsdkjflsdkfjldskfjlsdkfjldskfjlsdkjflsdkfjlsdkfjlsdkjflsdkfjlsdkjflksdjflksdjflkjdslkfjsldkfjslkd";
 	ssize_t message_len = strlen(message);
 	if (sendto(sockfd, message, message_len, 0, (struct sockaddr*) &server_address, sizeof(server_address)) != message_len) {
 		fprintf(stderr, "sendto error: %s\n", strerror(errno)); 
 		return EXIT_FAILURE;		
 	}
 
-	close (sockfd);
+        close (sockfd);
 	return EXIT_SUCCESS;
 }
 	
