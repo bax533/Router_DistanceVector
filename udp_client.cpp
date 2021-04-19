@@ -10,9 +10,16 @@
 int main(int argc, char** argv)
 {
     char* ip_send;
+
+    struct IP input;
+
     if(argc == 2)
     {
         ip_send = argv[1];
+        Common::set_ip(ip_send, &input);
+
+        printf("%s <- broadcast\n%s <- ip\n%d <- mask\n\n", input.broadcast, input.ip, input.mask);
+
         if(!Common::check_input(ip_send))
         {
             printf("wrong input\n");
@@ -24,6 +31,7 @@ int main(int argc, char** argv)
         printf("podaj ip\n");
         return 0;
     }
+
 
     int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0) {
