@@ -1,5 +1,14 @@
 #include "Common.hpp"
 
+int Common::turn_time = 5;
+u_int32_t Common::INF = 4294967295; 
+std::chrono::time_point<std::chrono::steady_clock> Common::timer = std::chrono::steady_clock::now();
+
+void Common::dbg_ip(struct IP addr)
+{
+    printf("%s <- network\n%s <- broadcast\n%u <- mask\n", addr.network, addr.broadcast, addr.mask);
+}
+
 char* Common::get_IPV4(u_int32_t address)
 {
     unsigned char b1 = (address & 0xFF000000)>>24;
@@ -7,12 +16,13 @@ char* Common::get_IPV4(u_int32_t address)
     unsigned char b3 = (address & 0xFF00)>>8;
     unsigned char b4 = address & 0xFF;
 
-    char* res = (char*)malloc(4*3 + 3 + 1);
+    char* res = (char*)malloc(4 + 3 + 1);
     sprintf(res, "%u.%u.%u.%u", b1, b2, b3, b4);
     return res;
 }
 
-void Common::set_ip(const char* address, struct IP* src)
+//return ip without mask from address
+char* Common::set_ip(const char* address, struct IP* src)
 {
     std::string tmp = "";
     int it = 0;
@@ -56,10 +66,20 @@ void Common::set_ip(const char* address, struct IP* src)
     
 
     src->broadcast = Common::get_IPV4(ip);
-    src->ip = str;
     src->mask = (mask_t)mask;
+    src->network = Common::get_IPV4(ip & (~mask_bit));
 
-    return;
+    return str;
+}
+
+char* Common::int32_to_char(const dist_t address)
+{
+    char* ret = new char[5];
+    for (u_int32_t i = 0; i < 4; i++)
+        ret[3 - i] = (address >> (i * 8));
+    
+    
+    return ret;
 }
 
 u_int32_t Common::ip_to_uint32(const char* address)
@@ -77,4 +97,16 @@ char* Common::ip_to_char(const u_int32_t address)
     long tmp_address = (long)address;
     inet_ntop(AF_INET, &tmp_address, str, INET_ADDRSTRLEN);
     return str;
+}
+
+char* Common::get_broadcast(const char* address, mask_t mask)
+{
+    ip_t ip_int = Common::ip_to_uint32(address);
+    ip_int = SWAP_UINT32(ip_int);
+    u_int32_t mask_bit = 0;
+    for(int i=0; i<32-(mask); i++)
+        mask_bit = (mask_bit << 1) | 1;
+    ip_int = ip_int | mask_bit;
+    ip_int = SWAP_UINT32(ip_int);
+    return Common::ip_to_char(ip_int);
 }
