@@ -26,7 +26,7 @@ int Manager::init()
         std::cout<<ip_input.mask<<" mask\n"<<ip_input.network<<" network\n";
         #endif
 
-        u_int32_t ip_uint32 = Common::ip_to_uint32(ip_input.broadcast);
+        //u_int32_t ip_uint32 = Common::ip_to_uint32(ip_input.broadcast);
         this->routing_table[ip_input] = 
             std::pair<u_int32_t, u_int32_t>(distance, 0);
     }
@@ -194,8 +194,8 @@ char* Manager::prepare_message(const struct IP &ip_addr, dist_t distance, char* 
     const char dist_b3 = (distance & 0xFF00)>>8;
     const char dist_b4 = distance & 0xFF;
 
-    ip_t ip = ip_b1<<24 | ip_b2<<16 | ip_b3<<8 | ip_b4;
-    dist_t dist = dist_b1<<24 | dist_b2<<16 | dist_b3<<8 | dist_b4;
+    //ip_t ip = ip_b1<<24 | ip_b2<<16 | ip_b3<<8 | ip_b4;
+    //dist_t dist = dist_b1<<24 | dist_b2<<16 | dist_b3<<8 | dist_b4;
 
     sprintf(msg, "%c%c%c%c%c%c%c%c%c", ip_b1, ip_b2, ip_b3, ip_b4, mask, dist_b1, dist_b2, dist_b3, dist_b4);
 
@@ -236,8 +236,6 @@ void Manager::update_table()
         ip.network = resp->network;
         ip.broadcast = Common::get_broadcast(resp->network, resp->mask);
         
-        printf("%d length\n", strlen(ip.network));
-
         if(this->routing_table.find(ip) != this->routing_table.end())
         {
             auto val = this->routing_table[ip];
@@ -256,7 +254,7 @@ void Manager::update_table()
             );
         }
     }
-    /*
+    
     std::vector<struct IP> unreachable;
     for(auto const& [key, val] : this->routing_table)
     {
@@ -271,10 +269,20 @@ void Manager::update_table()
         }
         if(!in_response)
             unreachable.push_back(key);
+        else
+            this->unreachable_count[key] = 0;
     }
-    for(auto const &key : unreachable)
-        this->routing_table[key].first = Common::INF;
-    */
+    for(auto const key : unreachable)
+    {
+        if(this->unreachable_count.find(key) != this->unreachable_count.end())
+        {
+            this->unreachable_count[key] += 1;
+            if(this->unreachable_count[key] >= 3)
+                this->routing_table[key].first = Common::INF;
+        }
+        else
+            this->unreachable_count[key] = 1; 
+    }
     this->responses.clear();
 }
 

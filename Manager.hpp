@@ -27,6 +27,7 @@ private:
         
     //ip (broadcast), mask -> distance, ip
     std::map<struct IP, std::pair<dist_t, ip_t> > routing_table;
+    std::map<struct IP, int> unreachable_count;
     int sockfd;
     std::vector<Response*> responses;
     std::vector<char*> neighbours;

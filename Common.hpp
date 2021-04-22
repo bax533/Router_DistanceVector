@@ -36,10 +36,10 @@ struct IP
     }
     bool operator<(const IP &o) const{
         if(mask != o.mask)
-            mask < o.mask;
+            return mask < o.mask;
         else if(strcmp(network, o.network))
             return network<o.network;
-        else return false;
+        return false;
     }
 };
 
