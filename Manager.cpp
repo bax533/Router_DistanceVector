@@ -139,9 +139,7 @@ void Manager::send_current_table()
 
             if (sendto(sockfd_client, msg, 9, 0, (struct sockaddr*) &server_address, sizeof(server_address)) != message_len
                     && !strcmp("Success", strerror(errno))) {
-                    //fprintf(stderr, "sendto error: %s\n", strerror(errno)); 
-                close (sockfd_client);    
-                return;		
+                    //fprintf(stderr, "sendto error: %s\n", strerror(errno));		
             }
         }
     }
