@@ -181,8 +181,9 @@ void Manager::interpret_message(int8_t* msg, char* sender)
 
 char* Manager::prepare_message(const struct IP &ip_addr, dist_t distance, char* &msg)
 {
-
+    printf("before: %s\n", ip_addr.network);
     ip_t ip_network_int = Common::ip_to_uint32(ip_addr.network);
+
     mask_t mask = ip_addr.mask;
 
     const char ip_b1 = (ip_network_int & 0xFF000000)>>24;
