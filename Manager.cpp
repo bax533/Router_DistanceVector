@@ -151,10 +151,10 @@ void Manager::send_current_table()
 
 void Manager::interpret_message(int8_t* msg, char* sender)
 {
-    char ip_b1 = msg[0];
-    char ip_b2 = msg[1];
-    char ip_b3 = msg[2];
-    char ip_b4 = msg[3];
+    unsigned char ip_b1 = msg[0];
+    unsigned char ip_b2 = msg[1];
+    unsigned char ip_b3 = msg[2];
+    unsigned char ip_b4 = msg[3];
 
     mask_t mask = msg[4];
 
@@ -186,10 +186,10 @@ char* Manager::prepare_message(const struct IP &ip_addr, dist_t distance, char* 
 
     mask_t mask = ip_addr.mask;
 
-    const char ip_b1 = (ip_network_int & 0xFF000000)>>24;
-    const char ip_b2 = (ip_network_int & 0xFF0000)>>16;
-    const char ip_b3 = (ip_network_int & 0xFF00)>>8;
-    const char ip_b4 = ip_network_int & 0xFF;
+    const unsigned char ip_b1 = (ip_network_int & 0xFF000000)>>24;
+    const unsigned char ip_b2 = (ip_network_int & 0xFF0000)>>16;
+    const unsigned char ip_b3 = (ip_network_int & 0xFF00)>>8;
+    const unsigned char ip_b4 = ip_network_int & 0xFF;
 
     const char dist_b1 = (distance & 0xFF000000)>>24;
     const char dist_b2 = (distance & 0xFF0000)>>16;
