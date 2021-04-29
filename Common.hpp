@@ -31,7 +31,7 @@ struct IP
     int8_t mask;
     
     int operator==(const IP &o) const{
-        return mask==o.mask && !strcmp(network, o.network);
+        return !strcmp(network, o.network);
     }
     bool operator<(const IP &o) const{
         if(mask != o.mask)
@@ -61,6 +61,8 @@ public:
     static char* int32_to_char(const dist_t address);
     static char* get_broadcast(const char* address, mask_t mask);
     static void dbg_ip(struct IP addr);
+    static int is_in_network(struct IP net, const char* single);
+
 
     static std::chrono::time_point<std::chrono::steady_clock> timer;
     static int turn_time;

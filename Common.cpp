@@ -110,3 +110,11 @@ char* Common::get_broadcast(const char* address, mask_t mask)
     ip_int = SWAP_UINT32(ip_int);
     return Common::ip_to_char(ip_int);
 }
+
+int Common::is_in_network(struct IP net, const char* single)
+{
+    if(!strcmp(net.broadcast, Common::get_broadcast(single, net.mask)))
+        return 1;
+    else
+        return 0;
+}

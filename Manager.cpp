@@ -233,29 +233,52 @@ void Manager::display_current_table()
 
 void Manager::update_table()
 {
-    for(const Response* resp : this->responses)
+    for(int i=0; i<2; i++)
     {
-        struct IP ip;
-        ip.mask = resp->mask;
-        ip.network = resp->network;
-        ip.broadcast = Common::get_broadcast(resp->network, resp->mask);
-        
-        if(this->routing_table.find(ip) != this->routing_table.end())
+        for(const Response* resp : this->responses)
         {
-            auto val = this->routing_table[ip];
-            if(resp->distance < val.first)
+            struct IP ip;
+            ip.mask = resp->mask;
+            ip.network = resp->network;
+            ip.broadcast = Common::get_broadcast(resp->network, resp->mask);
+        
+            int new_dist = resp->distance;
+            char* ip_via = resp->via;
+
+            int found = 0;
+            struct IP key_found;
+            for(auto const& [key, val] : this->routing_table)
             {
+                if(Common::is_in_network(key, ip_via))
+                {
+                    found = 1;
+                    key_found = key;
+                    break;
+                }
+            }
+
+            if(!found)
+                continue;
+
+            new_dist += this->routing_table[key_found].first;
+
+            if(this->routing_table.find(ip) != this->routing_table.end())
+            {
+                auto val = this->routing_table[ip];
+                if(new_dist < val.first)
+                {
+                    this->routing_table[ip] = std::pair<dist_t, ip_t>(
+                        new_dist,
+                        Common::ip_to_uint32(resp->via)
+                    );
+                }
+            }
+            else{
                 this->routing_table[ip] = std::pair<dist_t, ip_t>(
-                    resp->distance,
+                    new_dist,
                     Common::ip_to_uint32(resp->via)
                 );
             }
-        }
-        else{
-            this->routing_table[ip] = std::pair<dist_t, ip_t>(
-                resp->distance,
-                Common::ip_to_uint32(resp->via)
-            );
         }
     }
     
