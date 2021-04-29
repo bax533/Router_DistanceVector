@@ -18,7 +18,6 @@
 
 #define SWAP_UINT32(x) (((x) >> 24) | (((x) & 0x00FF0000) >> 8) | (((x) & 0x0000FF00) << 8) | ((x) << 24))
 
-#define DEBUG
 
 typedef u_int32_t ip_t;
 typedef u_int32_t dist_t;
@@ -38,7 +37,7 @@ struct IP
         if(mask != o.mask)
             return mask < o.mask;
         else if(strcmp(network, o.network))
-            return network<o.network;
+            return network < o.network;
         return false;
     }
 };

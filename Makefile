@@ -4,7 +4,7 @@ OBJS = Common.o \
 	Manager.o
 
 CXX = g++
-CXXFLAGS = -std=c++17 -DLOCAL -Wall -Wextra -Wreorder -Ofast -O3 -flto -march=native -s
+CXXFLAGS = -std=c++17 
 DFLAGS = -ggdb -fsanitize=address -fsanitize=undefined
 RFLAGS = -DNDEBUG
 
@@ -24,5 +24,4 @@ $(TARGET): $(OBJS) main.o
 
 clean:
 	rm -f *.o
-distclean: clean
-	rm -f $(TARGET) fight
+

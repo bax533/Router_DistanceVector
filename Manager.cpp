@@ -100,7 +100,7 @@ void Manager::get_response()
     char* reply = "Thank you!";
     ssize_t reply_len = strlen(reply);
     if (sendto(sockfd, reply, reply_len, 0, (struct sockaddr*)&sender, sender_len) != reply_len) {
-            fprintf(stderr, "sendto error: %s\n", strerror(errno)); 
+            //fprintf(stderr, "sendto error: %s\n", strerror(errno)); 
             return;		
     }
     fflush(stdout);
@@ -139,7 +139,7 @@ void Manager::send_current_table()
 
             if (sendto(sockfd_client, msg, 9, 0, (struct sockaddr*) &server_address, sizeof(server_address)) != message_len
                     && !strcmp("Success", strerror(errno))) {
-                    fprintf(stderr, "sendto error: %s\n", strerror(errno)); 
+                    //fprintf(stderr, "sendto error: %s\n", strerror(errno)); 
                     return;		
             }
         }

@@ -1,6 +1,6 @@
 #include "Common.hpp"
 
-int Common::turn_time = 5;
+int Common::turn_time = 15;
 u_int32_t Common::INF = 4294967295; 
 std::chrono::time_point<std::chrono::steady_clock> Common::timer = std::chrono::steady_clock::now();
 
