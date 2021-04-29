@@ -166,11 +166,10 @@ void Manager::interpret_message(int8_t* msg, char* sender)
     char dist_b4 = msg[8];
 
     ip_t ip = ip_b1<<24 | ip_b2<<16 | ip_b3<<8 | ip_b4;
-    ip = SWAP_UINT32(ip); 
     
     dist_t dist = dist_b1<<24 | dist_b2<<16 | dist_b3<<8 | dist_b4;
 
-    //printf("\n ----INTERPRETTING:\n%s <- ip\n%d <- mask\n%d <- dist\n", Common::ip_to_char(ip), mask, dist);
+    printf("\n ----INTERPRETTING:\n%s <- ip\n%d <- mask\n%d <- dist\n", Common::ip_to_char(ip), mask, dist);
  
     struct Response* response = (struct Response*)malloc(sizeof(struct Response));
     response->network = Common::ip_to_char(ip);
